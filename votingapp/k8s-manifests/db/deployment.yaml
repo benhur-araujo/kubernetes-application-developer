@@ -1,24 +1,69 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgresql
-  namespace: votingapp
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: "2024-06-25T12:29:17Z"
+  generation: 1
   labels:
-    app: postgresql
+    app: db
+  name: db
+  namespace: votingapp
+  resourceVersion: "24657"
+  uid: 84361bcf-64b8-49f9-a689-3440e45071b2
 spec:
+  progressDeadlineSeconds: 600
   replicas: 1
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: postgresql
+      app: db
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
+      creationTimestamp: null
       labels:
-        app: postgresql
+        app: db
     spec:
       containers:
-      - image: postgres:latest
+      - env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: postgres
+        image: postgres:16-alpine
+        imagePullPolicy: IfNotPresent
         name: postgres
-        env:
-          - name: "POSTGRES_PASSWORD"
-            value: "postgres"
+        ports:
+        - containerPort: 5432
+          protocol: TCP
         resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  conditions:
+  - lastTransitionTime: "2024-06-25T12:29:17Z"
+    lastUpdateTime: "2024-06-25T12:29:17Z"
+    message: Deployment does not have minimum availability.
+    reason: MinimumReplicasUnavailable
+    status: "False"
+    type: Available
+  - lastTransitionTime: "2024-06-25T12:29:17Z"
+    lastUpdateTime: "2024-06-25T12:29:17Z"
+    message: ReplicaSet "db-75f49ddb7" is progressing.
+    reason: ReplicaSetUpdated
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  replicas: 1
+  unavailableReplicas: 1
+  updatedReplicas: 1

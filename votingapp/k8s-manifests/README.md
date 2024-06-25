@@ -1,10 +1,36 @@
 # Steps to deploy votingapp
 
 1.  **Create votingapp namespace**
+- ```
+  k create ns votingapp && \
+  k config set-context --current --namespace=votingapp
+  ```
 
-- ``` k create ns votingapp ```
+2. **Create manifests for db-service**
+- ```
+  k create deployment -n votingapp db --image=postgres:16-alpine --port 5432 && \
+  k set env -n votingapp deployment/db POSTGRES_USER=postgres POSTGRES_PASSWORD=postgres --dry-run=client -o yaml > db/deployment.yaml
+  ```
+- Edit the generated manifest to add an emptyDir volume named "db-data" to /var/lib/postgresql/data mountPath
+- ```
+  k expose -f db/deployment.yaml --port=5432 --target-port=5432 --dry-run=client -o yaml > db/service.yaml && \
+  k apply -f db/.
+  ```
 
-2. **Create db deployment manifest**
-- ``` k create deployment db -n votingapp --image=postgres:16-alpine ```
-- ``` k set env deployment/db -n votingapp POSTGRES_USER=postgres POSTGRES_PASSWORD=postgres --dry-run=client -o yaml > db/db-deployment.yaml ```
-- ``` k apply -f db/db-deployment.yaml ```
+3. **Create manifests for redis-service**
+- `k create deployment -n votingapp redis --image=redis:alpine --dry-run=client -o yaml > redis/deployment.yaml`
+- Edit the generated manifest to add an emptyDir volume named "redis-data" to /data mountPath
+- ```
+  k expose -f redis/deployment --port=6379 --target-port=6379 --dry-run=client -o yaml > redis/service.yaml && \
+  k apply -f redis/.
+  ```
+
+4. **Create manifests for worker-service**
+- `k create deployment -n votingapp worker --image=dockersamples/examplevotingapp_worker --dry-run=client -o yaml | tee worker/deployment.yaml | k apply -f -`
+
+5. **Create manifests for vote-service**
+    ```
+    k create deployment -n votingapp vote --image=dockersamples/examplevotingapp_vote --port=80 --dry-run=client -o yaml > vote/deployment.yaml && \
+    k expose -f vote/deployment.yaml --port=80 --target-port=80 --dry-run=client -o yaml > vote/service.yaml && \
+    k apply -f vote/.
+    ```
