@@ -21,7 +21,7 @@
 - `k create deployment -n votingapp redis --image=redis:alpine --dry-run=client -o yaml > redis/deployment.yaml`
 - Edit the generated manifest to add an emptyDir volume named "redis-data" to /data mountPath
 - ```
-  k expose -f redis/deployment --port=6379 --target-port=6379 --dry-run=client -o yaml > redis/service.yaml && \
+  k expose -f redis/deployment.yaml --port=6379 --target-port=6379 --dry-run=client -o yaml > redis/service.yaml && \
   k apply -f redis/.
   ```
 
@@ -32,5 +32,14 @@
     ```
     k create deployment -n votingapp vote --image=dockersamples/examplevotingapp_vote --port=80 --dry-run=client -o yaml > vote/deployment.yaml && \
     k expose -f vote/deployment.yaml --port=80 --target-port=80 --dry-run=client -o yaml > vote/service.yaml && \
+    k create ingress vote --rule="vote.conquerproject.io/*=vote:80" --class=nginx --dry-run=client -o yaml > vote/ingress.yaml && \
     k apply -f vote/.
+    ```
+  
+6. **Create manifests for result-service**
+    ```
+    k create deployment -n votingapp result --image=dockersamples/examplevotingapp_result --port=80 --dry-run=client -o yaml > result/deployment.yaml && \
+    k expose -f result/deployment.yaml --port=80 --target-port=80 --dry-run=client -o yaml > result/service.yaml && \
+    k create ingress result --rule="result.conquerproject.io/*=result:80" --class=nginx --dry-run=client -o yaml > result/ingress.yaml && \
+    k apply -f result/.
     ```

@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  creationTimestamp: null
+  name: result
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: result.conquerproject.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: result
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+status:
+  loadBalancer: {}
