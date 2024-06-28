@@ -8,49 +8,48 @@ This project is designed to help me study for the Certified Kubernetes Applicati
 
 ### Application 1: Canary Deployment Strategy | PSQL - Shared Storage
 
-14. **PostgreSQL Deployment**
+1. **PostgreSQL Deployment**
     - Create a Deployment for PostgreSQL.
     - Configure Persistent Volumes (PVs), Persistent Volume Claims (PVCs), and StorageClasses for storage.
 
-1. **Develop a Dockerfile for the App**
+2. **Develop a Dockerfile for the App**
    - Create a Dockerfile to containerize your application.
 
 2. **Deploy the Application**
    - Override the entrypoint and arguments in the Deployment manifest.
    - Include an InitContainer and a sidecar container in the Deployment manifest.
 
-4. **Inject Environment Variables**
+3. **Inject Environment Variables**
    - Use ConfigMaps to inject non-sensitive environment variables.
    - Use Secrets to inject sensitive environment variables.
 
-5. **Inject Configuration Files**
+4. **Inject Configuration Files**
    - Use ConfigMaps for configuration files.
    - Use Secrets for sensitive configuration files.
 
-
-6. **Configure the App to Assume a Service Account**
+5. **Configure the App to Assume a Service Account**
    - Create and bind a Service Account to the Deployment.
    - That Service Account will have permission to call the API Server.
 
-7. **Set Resource Requests and Limits**
+6. **Set Resource Requests and Limits**
    - Define CPU and memory requests and limits for the containers.
 
-8. **Manage Pod Scheduling**
+7. **Manage Pod Scheduling**
    - Use NodeSelectors, Node affinities, and tolerations for pod scheduling.
 
-9. **Configure Readiness and Liveness Probes**
+8. **Configure Readiness and Liveness Probes**
    - Define readiness and liveness probes to monitor the application's health.
 
-10. **Create a CronJob**
+9. **Create a CronJob**
     - Create a CronJob to perform periodic tasks related to the application.
 
-11. **Add Annotations and Labels**
+10. **Add Annotations and Labels**
     - Add annotations and labels to the pods for better organization and management.
 
-12. **Configure Canary Deployment Strategy**
+11. **Configure Canary Deployment Strategy**
     - Implement a canary deployment strategy using Kubernetes Deployment and Services.
 
-13. **Expose the App to the Internet**
+12. **Expose the App to the Internet**
     - Create an Ingress resource to expose the application.
     - Use a valid DNS domain to access the application.
 
