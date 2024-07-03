@@ -21,5 +21,7 @@ spec:
       containers:
       - image: dockersamples/examplevotingapp_worker
         name: examplevotingapp-worker-mq8z5
+        command: ["dotnet"]
+        args: ["Worker.dll"]
         resources: {}
 status: {}

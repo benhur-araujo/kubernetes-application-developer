@@ -23,5 +23,10 @@ spec:
         name: examplevotingapp-vote-wfh47
         ports:
         - containerPort: 80
+        env:
+          - name: FLASK_ENV
+            value: development
+        command: [ "python" ]
+        args: [ "app.py" ]
         resources: {}
 status: {}

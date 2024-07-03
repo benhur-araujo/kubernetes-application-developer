@@ -11,7 +11,8 @@
   k create deployment -n votingapp db --image=postgres:16-alpine --port 5432 && \
   k set env -n votingapp deployment/db POSTGRES_USER=postgres POSTGRES_PASSWORD=postgres --dry-run=client -o yaml > db/deployment.yaml
   ```
-- Edit the generated manifest to add an emptyDir volume named "db-data" to /var/lib/postgresql/data mountPath
+- Create a `PersistentVolumeClaim` manifest referring the default `StorageClass`
+- Edit the deployment manifest to add the `PersistentVolumeClaim` volume to /var/lib/postgresql/data mountPath
 - ```
   k expose -f db/deployment.yaml --port=5432 --target-port=5432 --dry-run=client -o yaml > db/service.yaml && \
   k apply -f db/.
@@ -27,6 +28,7 @@
 
 4. **Create manifests for worker-service**
 - `k create deployment -n votingapp worker --image=dockersamples/examplevotingapp_worker --dry-run=client -o yaml | tee worker/deployment.yaml | k apply -f -`
+- Change the default container image ENTRYPOINT and CMD
 
 5. **Create manifests for vote-service**
     ```
@@ -35,7 +37,8 @@
     k create ingress vote --rule="vote.conquerproject.io/*=vote:80" --class=nginx --dry-run=client -o yaml > vote/ingress.yaml && \
     k apply -f vote/.
     ```
-  
+- Change the default container image ENTRYPOINT and CMD
+
 6. **Create manifests for result-service**
     ```
     k create deployment -n votingapp result --image=dockersamples/examplevotingapp_result --port=80 --dry-run=client -o yaml > result/deployment.yaml && \
@@ -43,3 +46,4 @@
     k create ingress result --rule="result.conquerproject.io/*=result:80" --class=nginx --dry-run=client -o yaml > result/ingress.yaml && \
     k apply -f result/.
     ```
+- Change the default container image ENTRYPOINT and CMD

@@ -23,5 +23,7 @@ spec:
         name: examplevotingapp-result-vhr4p
         ports:
         - containerPort: 80
+        command: ["/usr/bin/tini", "--"]
+        args: ["node", "server.js"]
         resources: {}
 status: {}
