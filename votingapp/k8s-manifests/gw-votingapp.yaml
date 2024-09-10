@@ -1,0 +1,26 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: gw-votingapp
+  namespace: gw-votingapp
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: "/healthz/ready"
+    service.beta.kubernetes.io/port_80_health-probe_protocol: http
+    service.beta.kubernetes.io/port_80_health-probe_port: "15021"
+    service.beta.kubernetes.io/port_443_health-probe_protocol: http
+    service.beta.kubernetes.io/port_443_health-probe_port: "15021"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  gatewayClassName: istio
+  listeners:
+    - name: vote
+      hostname: "*.conquerproject.io"
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - name: gw-certificate
+      allowedRoutes:
+        namespaces:
+          from: All

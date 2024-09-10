@@ -5,8 +5,8 @@ metadata:
   namespace: votingapp
 spec:
   parentRefs:
-    - name: api-gateway-istio
-      namespace: istio-system
+    - name: gw-votingapp
+      namespace: gw-votingapp
   hostnames:
     - vote.conquerproject.io
   rules:

@@ -5,6 +5,7 @@ metadata:
   labels:
     app: redis
   name: redis
+  namespace: votingapp
 spec:
   ports:
   - port: 6379
